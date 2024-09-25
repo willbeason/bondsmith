@@ -8,7 +8,7 @@ import (
 type CountReader struct {
 	io.Reader
 
-	Count int64
+	count int64
 }
 
 func NewCountReader(r io.Reader) *CountReader {
@@ -17,9 +17,13 @@ func NewCountReader(r io.Reader) *CountReader {
 	}
 }
 
-func (r *CountReader) Read(p []byte) (n int, err error) {
+func (r *CountReader) Read(p []byte) (int, error) {
 	read, err := r.Reader.Read(p)
-	r.Count += int64(read)
+	r.count += int64(read)
 
 	return read, err
+}
+
+func (r *CountReader) Count() int64 {
+	return r.count
 }

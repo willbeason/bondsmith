@@ -2,7 +2,6 @@ package bondsmith_io
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"iter"
 )
@@ -12,44 +11,26 @@ type JsonWriter[T any] struct {
 	w io.Writer
 
 	seq iter.Seq[T]
-
-	reporter ErrorReporter
 }
 
-func NewJsonWriter[T any](w io.Writer, seq iter.Seq[T], opts ...JsonWriterOpt[T]) *JsonWriter[T] {
-	result := &JsonWriter[T]{
+func NewJsonWriter[T any](w io.Writer, seq iter.Seq[T]) *JsonWriter[T] {
+	return &JsonWriter[T]{
 		w:   w,
 		seq: seq,
-	}
-
-	for _, opt := range opts {
-		opt(result)
-	}
-
-	return result
-}
-
-type JsonWriterOpt[T any] func(*JsonWriter[T])
-
-func JsonWriterErrorReporter[T any](reporter ErrorReporter) JsonWriterOpt[T] {
-	return func(w *JsonWriter[T]) {
-		w.reporter = reporter
 	}
 }
 
 // Write consumes the sequence of objects, encoding them to the Writer.
 // Errors are suppressed unless an error reporting option is passed at creation time.
-func (w *JsonWriter[T]) Write() {
+func (w *JsonWriter[T]) Write() error {
 	encoder := json.NewEncoder(w.w)
 
 	for obj := range w.seq {
 		err := encoder.Encode(obj)
 		if err != nil {
-			if w.reporter != nil {
-				err = fmt.Errorf("encoding json: %w", err)
-				w.reporter.Report(err)
-			}
-			return
+			return err
 		}
 	}
+
+	return nil
 }

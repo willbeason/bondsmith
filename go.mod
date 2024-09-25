@@ -1,3 +1,5 @@
 module github.com/willbeason/bondsmith-io
 
-go 1.22.5
+go 1.23.1
+
+require google.golang.org/protobuf v1.34.2
