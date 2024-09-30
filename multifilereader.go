@@ -45,6 +45,16 @@ func (mr *MultiFileReader) getReader() (*bufio.Reader, error) {
 	return mr.reader, nil
 }
 
+func (mr *MultiFileReader) close() error {
+	err := mr.closer.Close()
+	if err != nil {
+		return fmt.Errorf("closing file: %w", err)
+	}
+
+	mr.reader = nil
+	return nil
+}
+
 func (mr *MultiFileReader) Read(p []byte) (int, error) {
 	reader, err := mr.getReader()
 	if err != nil {
@@ -53,12 +63,11 @@ func (mr *MultiFileReader) Read(p []byte) (int, error) {
 
 	n, err := reader.Read(p)
 	if err == io.EOF {
-		err = mr.closer.Close()
+		err = mr.close()
 		if err != nil {
-			return 0, fmt.Errorf("closing file: %w", err)
+			return 0, err
 		}
 
-		mr.reader = nil
 		return mr.Read(p)
 	}
 
@@ -74,9 +83,9 @@ func (mr *MultiFileReader) ReadByte() (byte, error) {
 
 	b, err := reader.ReadByte()
 	if err == io.EOF {
-		err = mr.closer.Close()
+		err = mr.close()
 		if err != nil {
-			return 0, fmt.Errorf("closing file: %w", err)
+			return 0, err
 		}
 
 		mr.reader = nil
