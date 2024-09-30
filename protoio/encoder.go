@@ -13,7 +13,7 @@ type Encoder[T proto.Message] struct {
 	buf []byte
 }
 
-func NewProtoEncoder[T proto.Message](w io.Writer) *Encoder[T] {
+func NewEncoder[T proto.Message](w io.Writer) *Encoder[T] {
 	return &Encoder[T]{
 		w:   w,
 		buf: make([]byte, binary.MaxVarintLen64),

@@ -13,7 +13,7 @@ type Writer[T any] struct {
 	seq iter.Seq[T]
 }
 
-func NewJsonWriter[T any](w io.Writer, seq iter.Seq[T]) *Writer[T] {
+func NewWriter[T any](w io.Writer, seq iter.Seq[T]) *Writer[T] {
 	return &Writer[T]{
 		w:   w,
 		seq: seq,

@@ -12,15 +12,13 @@ type Reader[T proto.Message] struct {
 	newValue func() T
 }
 
-func NewProtoReader[T proto.Message](r bondsmith.Reader) *Reader[T] {
+func NewReader[T proto.Message](r bondsmith.Reader) *Reader[T] {
 	return &Reader[T]{r: r}
 }
 
-type ProtoReaderOpt[T proto.Message] func(*Reader[T])
-
 func (r *Reader[T]) Read() iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
-		decoder := NewProtoDecoder[T](r.r)
+		decoder := NewDecoder[T](r.r)
 
 		for {
 			v := r.newValue()

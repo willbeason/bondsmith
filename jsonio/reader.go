@@ -13,7 +13,7 @@ type Reader[T any] struct {
 	newValue func() T
 }
 
-func NewJsonReader[T any](r io.Reader, newValue func() T) *Reader[T] {
+func NewReader[T any](r io.Reader, newValue func() T) *Reader[T] {
 	return &Reader[T]{
 		r:        r,
 		newValue: newValue,

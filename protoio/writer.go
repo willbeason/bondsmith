@@ -12,23 +12,15 @@ type Writer[T proto.Message] struct {
 	seq iter.Seq[T]
 }
 
-func NewProtoWriter[T proto.Message](w io.Writer, seq iter.Seq[T], opts ...ProtoWriterOpt[T]) *Writer[T] {
-	result := &Writer[T]{
+func NewWriter[T proto.Message](w io.Writer, seq iter.Seq[T]) *Writer[T] {
+	return &Writer[T]{
 		w:   w,
 		seq: seq,
 	}
-
-	for _, opt := range opts {
-		opt(result)
-	}
-
-	return result
 }
 
-type ProtoWriterOpt[T proto.Message] func(*Writer[T])
-
 func (w *Writer[T]) Write() error {
-	encoder := NewProtoEncoder[T](w.w)
+	encoder := NewEncoder[T](w.w)
 
 	for obj := range w.seq {
 		err := encoder.Encode(obj)

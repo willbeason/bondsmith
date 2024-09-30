@@ -14,7 +14,7 @@ type Decoder[T proto.Message] struct {
 	buf []byte
 }
 
-func NewProtoDecoder[T proto.Message](r bondsmith.Reader) *Decoder[T] {
+func NewDecoder[T proto.Message](r bondsmith.Reader) *Decoder[T] {
 	return &Decoder[T]{r: r}
 }
 
