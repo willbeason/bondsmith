@@ -1,4 +1,4 @@
-package bondsmith_io
+package jsonio
 
 import (
 	"encoding/json"
@@ -21,7 +21,6 @@ func NewJsonWriter[T any](w io.Writer, seq iter.Seq[T]) *JsonWriter[T] {
 }
 
 // Write consumes the sequence of objects, encoding them to the Writer.
-// Errors are suppressed unless an error reporting option is passed at creation time.
 func (w *JsonWriter[T]) Write() error {
 	encoder := json.NewEncoder(w.w)
 

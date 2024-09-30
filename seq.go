@@ -1,4 +1,4 @@
-package bondsmith_io
+package bondsmith
 
 import "iter"
 

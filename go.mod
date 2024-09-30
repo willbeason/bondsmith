@@ -1,4 +1,4 @@
-module github.com/willbeason/bondsmith-io
+module github.com/willbeason/bondsmith
 
 go 1.23.1
 

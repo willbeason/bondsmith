@@ -1,4 +1,4 @@
-package bondsmith_io
+package jsonio
 
 import (
 	"encoding/json"
@@ -21,7 +21,6 @@ func NewJsonReader[T any](r io.Reader, newValue func() T) *JsonReader[T] {
 }
 
 // Read returns an iter.Seq which sequentially decodes Json objects from the reader.
-// Errors are suppressed unless an error reporter is passed at creation time.
 func (r *JsonReader[T]) Read() iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
 		decoder := json.NewDecoder(r.r)
