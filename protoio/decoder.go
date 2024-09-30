@@ -3,22 +3,18 @@ package protoio
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/willbeason/bondsmith"
 	"google.golang.org/protobuf/proto"
 	"io"
 )
 
-type Reader interface {
-	io.Reader
-	io.ByteReader
-}
-
 type ProtoDecoder[T proto.Message] struct {
-	r Reader
+	r bondsmith.Reader
 
 	buf []byte
 }
 
-func NewProtoDecoder[T proto.Message](r Reader) *ProtoDecoder[T] {
+func NewProtoDecoder[T proto.Message](r bondsmith.Reader) *ProtoDecoder[T] {
 	return &ProtoDecoder[T]{r: r}
 }
 

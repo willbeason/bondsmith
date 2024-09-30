@@ -1,17 +1,18 @@
 package protoio
 
 import (
+	"github.com/willbeason/bondsmith"
 	"google.golang.org/protobuf/proto"
 	"iter"
 )
 
 type ProtoReader[T proto.Message] struct {
-	r Reader
+	r bondsmith.Reader
 
 	newValue func() T
 }
 
-func NewProtoReader[T proto.Message](r Reader) *ProtoReader[T] {
+func NewProtoReader[T proto.Message](r bondsmith.Reader) *ProtoReader[T] {
 	return &ProtoReader[T]{r: r}
 }
 
