@@ -6,14 +6,14 @@ import (
 	"iter"
 )
 
-type ProtoWriter[T proto.Message] struct {
+type Writer[T proto.Message] struct {
 	w io.Writer
 
 	seq iter.Seq[T]
 }
 
-func NewProtoWriter[T proto.Message](w io.Writer, seq iter.Seq[T], opts ...ProtoWriterOpt[T]) *ProtoWriter[T] {
-	result := &ProtoWriter[T]{
+func NewProtoWriter[T proto.Message](w io.Writer, seq iter.Seq[T], opts ...ProtoWriterOpt[T]) *Writer[T] {
+	result := &Writer[T]{
 		w:   w,
 		seq: seq,
 	}
@@ -25,9 +25,9 @@ func NewProtoWriter[T proto.Message](w io.Writer, seq iter.Seq[T], opts ...Proto
 	return result
 }
 
-type ProtoWriterOpt[T proto.Message] func(*ProtoWriter[T])
+type ProtoWriterOpt[T proto.Message] func(*Writer[T])
 
-func (w *ProtoWriter[T]) Write() error {
+func (w *Writer[T]) Write() error {
 	encoder := NewProtoEncoder[T](w.w)
 
 	for obj := range w.seq {

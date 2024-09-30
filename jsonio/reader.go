@@ -6,22 +6,22 @@ import (
 	"iter"
 )
 
-// JsonReader reads objects of type T from a Reader.
-type JsonReader[T any] struct {
+// Reader reads objects of type T from a Reader.
+type Reader[T any] struct {
 	r io.Reader
 
 	newValue func() T
 }
 
-func NewJsonReader[T any](r io.Reader, newValue func() T) *JsonReader[T] {
-	return &JsonReader[T]{
+func NewJsonReader[T any](r io.Reader, newValue func() T) *Reader[T] {
+	return &Reader[T]{
 		r:        r,
 		newValue: newValue,
 	}
 }
 
 // Read returns an iter.Seq which sequentially decodes Json objects from the reader.
-func (r *JsonReader[T]) Read() iter.Seq2[T, error] {
+func (r *Reader[T]) Read() iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
 		decoder := json.NewDecoder(r.r)
 

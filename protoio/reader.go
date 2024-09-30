@@ -6,19 +6,19 @@ import (
 	"iter"
 )
 
-type ProtoReader[T proto.Message] struct {
+type Reader[T proto.Message] struct {
 	r bondsmith.Reader
 
 	newValue func() T
 }
 
-func NewProtoReader[T proto.Message](r bondsmith.Reader) *ProtoReader[T] {
-	return &ProtoReader[T]{r: r}
+func NewProtoReader[T proto.Message](r bondsmith.Reader) *Reader[T] {
+	return &Reader[T]{r: r}
 }
 
-type ProtoReaderOpt[T proto.Message] func(*ProtoReader[T])
+type ProtoReaderOpt[T proto.Message] func(*Reader[T])
 
-func (r *ProtoReader[T]) Read() iter.Seq2[T, error] {
+func (r *Reader[T]) Read() iter.Seq2[T, error] {
 	return func(yield func(T, error) bool) {
 		decoder := NewProtoDecoder[T](r.r)
 

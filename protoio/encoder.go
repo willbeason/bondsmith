@@ -7,20 +7,20 @@ import (
 	"io"
 )
 
-type ProtoEncoder[T proto.Message] struct {
+type Encoder[T proto.Message] struct {
 	w io.Writer
 
 	buf []byte
 }
 
-func NewProtoEncoder[T proto.Message](w io.Writer) *ProtoEncoder[T] {
-	return &ProtoEncoder[T]{
+func NewProtoEncoder[T proto.Message](w io.Writer) *Encoder[T] {
+	return &Encoder[T]{
 		w:   w,
 		buf: make([]byte, binary.MaxVarintLen64),
 	}
 }
 
-func (e *ProtoEncoder[T]) Encode(msg T) error {
+func (e *Encoder[T]) Encode(msg T) error {
 	bytes, err := proto.Marshal(msg)
 	if err != nil {
 		return fmt.Errorf("marshalling proto: %w", err)

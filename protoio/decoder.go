@@ -8,17 +8,17 @@ import (
 	"io"
 )
 
-type ProtoDecoder[T proto.Message] struct {
+type Decoder[T proto.Message] struct {
 	r bondsmith.Reader
 
 	buf []byte
 }
 
-func NewProtoDecoder[T proto.Message](r bondsmith.Reader) *ProtoDecoder[T] {
-	return &ProtoDecoder[T]{r: r}
+func NewProtoDecoder[T proto.Message](r bondsmith.Reader) *Decoder[T] {
+	return &Decoder[T]{r: r}
 }
 
-func (d *ProtoDecoder[T]) Decode(msg T) error {
+func (d *Decoder[T]) Decode(msg T) error {
 	messageLength, err := binary.ReadUvarint(d.r)
 	if err != nil {
 		return fmt.Errorf("reading message length: %w", err)
