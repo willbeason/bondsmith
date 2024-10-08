@@ -39,6 +39,7 @@ func (mr *MultiReader) getReader() (*bufio.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	mr.closer = fileReader
 	mr.reader = bufio.NewReader(fileReader)
 
@@ -59,7 +60,9 @@ func (mr *MultiReader) Close() error {
 		return fmt.Errorf("closing file: %w", err)
 	}
 
+	mr.closer = nil
 	mr.reader = nil
+
 	return nil
 }
 
@@ -96,7 +99,6 @@ func (mr *MultiReader) ReadByte() (byte, error) {
 			return 0, err
 		}
 
-		mr.reader = nil
 		return mr.ReadByte()
 	}
 

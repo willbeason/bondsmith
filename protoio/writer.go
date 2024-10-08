@@ -6,6 +6,7 @@ import (
 	"iter"
 )
 
+// Writer writes objects of type T to a Writer as a stream of protos.
 type Writer[T proto.Message] struct {
 	w io.Writer
 

@@ -6,6 +6,7 @@ import (
 	"iter"
 )
 
+// Reader reads objects of type T from a Reader from a stream of protos.
 type Reader[T proto.Message] struct {
 	r bondsmith.Reader
 
