@@ -22,7 +22,7 @@ type MultiReader struct {
 
 var _ bondsmith.Reader = &MultiReader{}
 
-func NewMultiFileReader(filepaths []string) *MultiReader {
+func NewMultiReader(filepaths []string) *MultiReader {
 	return &MultiReader{filepaths: filepaths}
 }
 
@@ -42,7 +42,7 @@ func (mr *MultiReader) getReader() (*bufio.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	mr.closer = fileReader
 	mr.reader = bufio.NewReader(fileReader)
 

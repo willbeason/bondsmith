@@ -6,7 +6,7 @@ type BytesReadReader struct {
 	bytesRead int64
 }
 
-func NewBytesReadMultiReader(reader Reader) *BytesReadReader {
+func NewBytesReadReader(reader Reader) *BytesReadReader {
 	return &BytesReadReader{
 		Reader: reader,
 	}
