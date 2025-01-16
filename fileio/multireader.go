@@ -35,15 +35,16 @@ func (mr *MultiReader) getReader() (*bufio.Reader, error) {
 		return nil, io.EOF
 	}
 
-	fileReader, err := os.Open(mr.filepaths[0])
+	filepath := mr.filepaths[0]
+	mr.filepaths = mr.filepaths[1:]
+
+	fileReader, err := os.Open(filepath)
 	if err != nil {
 		return nil, err
 	}
-
+	
 	mr.closer = fileReader
 	mr.reader = bufio.NewReader(fileReader)
-
-	mr.filepaths = mr.filepaths[1:]
 
 	return mr.reader, nil
 }
