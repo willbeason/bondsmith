@@ -9,12 +9,12 @@ import (
 //
 // Not threadsafe.
 type AutoUpdater struct {
-	Updater
+	*Updater
 }
 
 // NewAutoUpdater instantiates an AutoUpdater.
 // Does not start updating the bar on instantiation; use Tick() to do so.
-func NewAutoUpdater(updater Updater) *AutoUpdater {
+func NewAutoUpdater(updater *Updater) *AutoUpdater {
 	return &AutoUpdater{
 		Updater: updater,
 	}
