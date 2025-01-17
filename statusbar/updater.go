@@ -29,4 +29,5 @@ func (u *Updater) Update() {
 	u.previousTotal = newTotal
 
 	u.bar.IncrBy(increment)
+	u.bar.Completed()
 }

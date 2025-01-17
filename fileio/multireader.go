@@ -14,7 +14,8 @@ import (
 // readers have returned EOF, Read will return EOF. If any reader returns any
 // other error, Read returns that error.
 type MultiReader struct {
-	filepaths []string
+	filepaths   []string
+	curFilepath string
 
 	closer io.Closer
 	reader *bufio.Reader
@@ -45,8 +46,14 @@ func (mr *MultiReader) getReader() (*bufio.Reader, error) {
 
 	mr.closer = fileReader
 	mr.reader = bufio.NewReader(fileReader)
+	mr.curFilepath = filepath
 
 	return mr.reader, nil
+}
+
+// CurFilepath returns the path to the currently-opened file, if one is currently open.
+func (mr *MultiReader) CurFilepath() string {
+	return mr.curFilepath
 }
 
 // Close closes the currently-opened file if one is currently opened.
@@ -63,6 +70,7 @@ func (mr *MultiReader) Close() error {
 
 	mr.closer = nil
 	mr.reader = nil
+	mr.curFilepath = ""
 
 	return nil
 }
