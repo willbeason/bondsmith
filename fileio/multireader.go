@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/willbeason/bondsmith"
 	"io"
+	"io/fs"
 	"os"
 )
 
@@ -14,7 +15,8 @@ import (
 // readers have returned EOF, Read will return EOF. If any reader returns any
 // other error, Read returns that error.
 type MultiReader struct {
-	filepaths []string
+	filesystem fs.FS
+	filepaths  []string
 
 	closer io.Closer
 	reader *bufio.Reader
@@ -22,8 +24,17 @@ type MultiReader struct {
 
 var _ bondsmith.Reader = &MultiReader{}
 
-func NewMultiFileReader(filepaths []string) *MultiReader {
-	return &MultiReader{filepaths: filepaths}
+func NewMultiReader(filepaths []string, opts ...MultiReaderOpt) *MultiReader {
+	mr := &MultiReader{filepaths: filepaths}
+
+	for _, opt := range opts {
+		opt(mr)
+	}
+
+	if mr.filesystem == nil {
+		mr.filesystem = os.DirFS(".")
+	}
+	return mr
 }
 
 func (mr *MultiReader) getReader() (*bufio.Reader, error) {
@@ -35,7 +46,7 @@ func (mr *MultiReader) getReader() (*bufio.Reader, error) {
 		return nil, io.EOF
 	}
 
-	fileReader, err := os.Open(mr.filepaths[0])
+	fileReader, err := mr.filesystem.Open(mr.filepaths[0])
 	if err != nil {
 		return nil, err
 	}
@@ -48,9 +59,19 @@ func (mr *MultiReader) getReader() (*bufio.Reader, error) {
 	return mr.reader, nil
 }
 
-// Close closes the currently-opened file if one is currently opened.
-// Does nothing and returns no error if no files are currently opened.
 func (mr *MultiReader) Close() error {
+	err := mr.close()
+	if err != nil {
+		return err
+	}
+
+	mr.filepaths = nil
+	return nil
+}
+
+// close closes the currently-opened file if one is currently opened.
+// Does nothing and returns no error if no files are currently opened.
+func (mr *MultiReader) close() error {
 	if mr.closer == nil {
 		return nil
 	}
@@ -74,7 +95,7 @@ func (mr *MultiReader) Read(p []byte) (int, error) {
 
 	n, err := reader.Read(p)
 	if err == io.EOF {
-		err = mr.Close()
+		err = mr.close()
 		if err != nil {
 			return 0, err
 		}
@@ -94,7 +115,7 @@ func (mr *MultiReader) ReadByte() (byte, error) {
 
 	b, err := reader.ReadByte()
 	if err == io.EOF {
-		err = mr.Close()
+		err = mr.close()
 		if err != nil {
 			return 0, err
 		}

@@ -24,7 +24,7 @@ func NewProgressMultiReader(filepaths []string) (*ProgressMultiReader, error) {
 	}
 
 	return &ProgressMultiReader{
-		mr:         NewMultiFileReader(filepaths),
+		mr:         NewMultiReader(filepaths),
 		totalBytes: totalBytes,
 	}, nil
 }
@@ -38,7 +38,7 @@ func (mr *ProgressMultiReader) TotalBytes() int64 {
 }
 
 func (mr *ProgressMultiReader) Close() error {
-	return mr.mr.Close()
+	return mr.mr.close()
 }
 
 func (mr *ProgressMultiReader) Read(p []byte) (int, error) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/vbauerster/mpb"
 	"github.com/vbauerster/mpb/decor"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 type StatusBarMultiReader struct {
@@ -20,7 +20,7 @@ func NewStatusBarMultiReader(filepaths []string) (*StatusBarMultiReader, error) 
 		return nil, fmt.Errorf("creating progress multireader: %w", err)
 	}
 
-	width, _, err := terminal.GetSize(0)
+	width, _, err := term.GetSize(0)
 	if err != nil {
 		return nil, fmt.Errorf("getting terminal width: %w", err)
 	}
